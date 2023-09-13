@@ -135,6 +135,13 @@ def put_face_into_placeholder(image, patch, inv):
 
     return inv_patch
 
+def softmask_blending(fg, bg, mask):
+    blur_kernel = 25
+    mask = cv2.erode(mask, np.ones((blur_kernel, blur_kernel), np.uint8))
+    softmask = cv2.GaussianBlur(mask, (blur_kernel, blur_kernel), 0)
+    blended = fg * softmask + bg * (1 - softmask)
+    return blended
+
 if __name__ == "__main__":
     Detector = RetinaFaceCustom()
     img_bgr = cv2.imread("img.png")
